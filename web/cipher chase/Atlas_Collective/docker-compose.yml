@@ -1,0 +1,24 @@
+services:
+  atlas:
+    build: ./atlas
+    container_name: eh_atlas
+    networks:
+      - eh_net
+    restart: unless-stopped
+
+  echo:
+    build: ./echo
+    container_name: eh_echo
+    ports:
+      - "8000:8000"    # Only Echo exposed to players
+    environment:
+      - ATLAS_ADDR=http://atlas:5173
+    depends_on:
+      - atlas
+    networks:
+      - eh_net
+    restart: unless-stopped
+
+networks:
+  eh_net:
+    driver: bridge
